@@ -1,6 +1,10 @@
 import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -11,13 +15,11 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
-import java.awt.Dimension;
-
 
 public class CFGSwing {
     static int np = 0;
     static String[][] grammar;
-    static JTextArea outputTextArea;
+    static JTextArea outputTextArea, inputTextArea;
     static JTable chartTable;
     static DefaultTableModel chartTableModel;
 
@@ -61,8 +63,14 @@ public class CFGSwing {
 
         JPanel panel = new JPanel(new BorderLayout());
 
-        JTextArea inputTextArea = new JTextArea(5, 20);
+        JPanel leftPanel = new JPanel();
+        leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.PAGE_AXIS)); // Use BoxLayout for left panel
+
         JButton checkButton = new JButton("Check");
+        JButton clearButton = new JButton("Clear");
+
+        JPanel rightPanel = new JPanel(new BorderLayout());
+        inputTextArea = new JTextArea(5, 20);
         outputTextArea = new JTextArea(10, 30);
         outputTextArea.setEditable(false);
 
@@ -81,19 +89,29 @@ public class CFGSwing {
             }
         });
 
-        panel.add(new JLabel("Enter the productions (in the format: variable,rule,terminal):"), BorderLayout.NORTH);
-        panel.add(inputScrollPane, BorderLayout.CENTER);
-        panel.add(checkButton, BorderLayout.SOUTH);
+        clearButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                clearGrammar();
+            }
+        });
+
+        leftPanel.add(checkButton);
+        leftPanel.add(Box.createVerticalStrut(10)); // Add vertical strut for spacing
+        leftPanel.add(clearButton);
+
+        rightPanel.add(new JLabel("Enter the productions (in the format: variable,rule,terminal):"), BorderLayout.NORTH);
+        rightPanel.add(inputScrollPane, BorderLayout.CENTER);
+        rightPanel.add(outputScrollPane, BorderLayout.SOUTH);
+
+        panel.add(leftPanel, BorderLayout.WEST);
+        panel.add(rightPanel, BorderLayout.CENTER);
+        panel.add(chartScrollPane, BorderLayout.SOUTH);
 
         frame.getContentPane().add(panel, BorderLayout.NORTH);
-        frame.getContentPane().add(chartScrollPane, BorderLayout.CENTER);
-        frame.getContentPane().add(outputScrollPane, BorderLayout.SOUTH);
 
         frame.pack();
         frame.setVisible(true);
     }
-
-
 
     private static void parseInputString(String input) {
         String[] lines = input.split("\n");
@@ -176,5 +194,13 @@ public class CFGSwing {
         } else {
             outputTextArea.append("\nString \"" + str + "\" is not accepted by the grammar.");
         }
+    }
+
+    private static void clearGrammar() {
+        np = 0;
+        grammar = null;
+        inputTextArea.setText("");
+        outputTextArea.setText("");
+        chartTableModel.setRowCount(0);
     }
 }
