@@ -140,7 +140,12 @@ public class CFGSwing {
         for (int i = 0; i < np; i++) {
             outputTextArea.append(lines[i] + "\n");
             String[] parts = lines[i].split(",");
-            for (int j = 0; j < 3; j++) {
+            if (parts.length != 3) {
+                JOptionPane.showMessageDialog(null, "Invalid grammar format: " + lines[i], "Error", JOptionPane.ERROR_MESSAGE);
+                clearGrammar();
+                return;
+            }
+            for (int j = 0; j < parts.length; j++) {
                 grammar[i][j] = parts[j].trim();
             }
         }
@@ -195,29 +200,24 @@ public class CFGSwing {
         chartTableModel.setColumnIdentifiers(columnNames);
         chartTableModel.setRowCount(len);
         for (int i = 0; i < len; i++) {
-            int columnWidth = Math.max(30, chartTable.getParent().getWidth() / (len + 1)); // Calculate column width
+            int columnWidth = Math.max(50, chartTable.getColumnModel().getColumn(i + 1).getPreferredWidth());
             chartTable.getColumnModel().getColumn(i + 1).setPreferredWidth(columnWidth);
-            chartTable.getColumnModel().getColumn(i + 1).setMaxWidth(columnWidth);
-            chartTable.getColumnModel().getColumn(i + 1).setResizable(false);
-            chartTable.setValueAt(str.charAt(i), i, 0);
-            for (int j = 0; j < len - i; j++) {
-                chartTable.setValueAt(chart[j][j + i], j, i + 1);
+            for (int j = i; j >= 0; j--) {
+                chartTable.setValueAt(chart[j][i], j, i + 1);
             }
         }
 
-        // Print the result
-        if (accepted) {
-            outputTextArea.append("\nString \"" + str + "\" is accepted by the grammar.");
-        } else {
-            outputTextArea.append("\nString \"" + str + "\" is not accepted by the grammar.");
-        }
+        // Output the result
+        outputTextArea.append("\nCYK Chart:\n");
+        outputTextArea.append("\nStart symbol: " + start);
+        outputTextArea.append("\nString: " + str);
+        outputTextArea.append("\nAccepted: " + accepted);
     }
 
     private static void clearGrammar() {
-        np = 0;
-        grammar = null;
         inputTextArea.setText("");
         outputTextArea.setText("");
+        chartTableModel.setColumnCount(0);
         chartTableModel.setRowCount(0);
     }
 }
