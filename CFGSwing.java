@@ -1,20 +1,10 @@
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextArea;
-import javax.swing.SwingUtilities;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 
 public class CFGSwing {
     static int np = 0;
@@ -66,6 +56,7 @@ public class CFGSwing {
         JPanel leftPanel = new JPanel();
         leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.PAGE_AXIS)); // Use BoxLayout for left panel
 
+        JButton importButton = new JButton("Import");
         JButton checkButton = new JButton("Check");
         JButton clearButton = new JButton("Clear");
 
@@ -83,6 +74,17 @@ public class CFGSwing {
         chartScrollPane.setPreferredSize(new Dimension(chartScrollPane.getPreferredSize().width, 100));
         chartScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
+        importButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser fileChooser = new JFileChooser();
+                int returnValue = fileChooser.showOpenDialog(null);
+                if (returnValue == JFileChooser.APPROVE_OPTION) {
+                    String filePath = fileChooser.getSelectedFile().getAbsolutePath();
+                    importGrammarFromFile(filePath);
+                }
+            }
+        });
+
         checkButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 parseInputString(inputTextArea.getText().trim());
@@ -95,6 +97,8 @@ public class CFGSwing {
             }
         });
 
+        leftPanel.add(importButton);
+        leftPanel.add(Box.createVerticalStrut(10)); // Add vertical strut for spacing
         leftPanel.add(checkButton);
         leftPanel.add(Box.createVerticalStrut(10)); // Add vertical strut for spacing
         leftPanel.add(clearButton);
@@ -111,6 +115,19 @@ public class CFGSwing {
 
         frame.pack();
         frame.setVisible(true);
+    }
+
+    private static void importGrammarFromFile(String filePath) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            StringBuilder grammarBuilder = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                grammarBuilder.append(line).append("\n");
+            }
+            inputTextArea.setText(grammarBuilder.toString());
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "Error importing grammar from file.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private static void parseInputString(String input) {
