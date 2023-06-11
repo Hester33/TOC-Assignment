@@ -16,6 +16,8 @@ import java.util.Scanner;
 import java.util.TreeSet;
 
 public class TestingGUI1 {
+	 JPanel panel = new JPanel();
+	
     static int np = 0;
     static String[][] grammar;
     static JTextArea outputTextArea, inputTextArea;
@@ -34,6 +36,98 @@ public class TestingGUI1 {
     private static String[] columnNames;
     
     private static boolean checkImport=false;
+    
+TestingGUI1(){
+//	JFrame frame = new JFrame("CYK");
+//    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+    this.panel = new JPanel(new BorderLayout(10,10));
+
+    JPanel leftPanel = new JPanel();
+    leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.PAGE_AXIS)); // Use BoxLayout for left panel
+
+    JButton importButton = new JButton("Import");
+    JButton checkButton = new JButton("Check");
+    JButton clearButton = new JButton("Clear");
+
+    JPanel rightPanel = new JPanel(new BorderLayout());
+    JPanel p = new JPanel(new BorderLayout());
+    JPanel p1 = new JPanel();
+
+    inputTextArea = new JTextArea(6, 20);
+    // Word label
+    JLabel wordLabel = new JLabel("Word:");
+    // Word text field
+    wordField = new JTextField(10);
+    outputTextArea = new JTextArea(10, 30);
+    outputTextArea.setEditable(false);
+
+    chartTableModel = new DefaultTableModel();
+    chartTable = new JTable(chartTableModel);
+    
+    JScrollPane inputScrollPane = new JScrollPane(inputTextArea);
+    JScrollPane outputScrollPane = new JScrollPane(outputTextArea);
+    JScrollPane chartScrollPane = new JScrollPane(chartTable);
+    chartScrollPane.setPreferredSize(new Dimension(chartScrollPane.getPreferredSize().width, 100));
+    chartScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+
+    importButton.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            JFileChooser fileChooser = new JFileChooser();
+            int returnValue = fileChooser.showOpenDialog(null);
+            if (returnValue == JFileChooser.APPROVE_OPTION) {
+                File filePath = fileChooser.getSelectedFile();
+            	importGrammarFromFile(filePath);
+            	checkImport=true;
+            }
+        }
+    });
+
+    checkButton.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+        	word =  wordField.getText();
+        	if(checkImport) {
+        		createCYKTable();
+        		implementCYK();
+                displayResult();
+        	}
+        	else {
+        		parseInputString(inputTextArea.getText().trim());
+        	}
+        }
+    });
+
+    clearButton.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            clearGrammar();
+        }
+    });
+
+    leftPanel.add(importButton);
+    leftPanel.add(Box.createVerticalStrut(10)); // Add vertical strut for spacing
+    leftPanel.add(checkButton);
+    leftPanel.add(Box.createVerticalStrut(10)); // Add vertical strut for spacing
+    leftPanel.add(clearButton);
+
+    //p.setLayout(new GridLayout(2,1));
+    p.add(new JLabel("Enter the productions (in the format: variable,rule,terminal):"), BorderLayout.NORTH);
+    p.add(inputScrollPane, BorderLayout.CENTER);
+    p1.setLayout(new FlowLayout(FlowLayout.LEFT));
+    p1.add(wordLabel);
+    p1.add(wordField);
+    rightPanel.add(p, BorderLayout.NORTH);
+    rightPanel.add(p1, BorderLayout.CENTER);
+    rightPanel.add(outputScrollPane, BorderLayout.SOUTH);
+    
+    
+    this.panel.add(leftPanel, BorderLayout.WEST);
+    this.panel.add(rightPanel, BorderLayout.CENTER);
+    this.panel.add(chartScrollPane, BorderLayout.SOUTH);
+//    frame.getContentPane().add(this.panel, BorderLayout.NORTH);
+//
+//    frame.pack();
+//    frame.setVisible(true);
+}
     
     // Checks if the passed string can be derived from the grammar
     static boolean check(String a) {
@@ -61,105 +155,105 @@ public class TestingGUI1 {
         return to_ret;
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                createAndShowGUI();
-            }
-        });
-    }
+//    public static void main(String[] args) {
+//        SwingUtilities.invokeLater(new Runnable() {
+//            public void run() {
+//                createAndShowGUI();
+//            }
+//        });
+//    }
 
-    private static void createAndShowGUI() {
-        JFrame frame = new JFrame("CYK");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        JPanel panel = new JPanel(new BorderLayout(10,10));
-
-        JPanel leftPanel = new JPanel();
-        leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.PAGE_AXIS)); // Use BoxLayout for left panel
-
-        JButton importButton = new JButton("Import");
-        JButton checkButton = new JButton("Check");
-        JButton clearButton = new JButton("Clear");
-
-        JPanel rightPanel = new JPanel(new BorderLayout());
-        JPanel p = new JPanel(new BorderLayout());
-        JPanel p1 = new JPanel();
-
-        inputTextArea = new JTextArea(6, 20);
-        // Word label
-        JLabel wordLabel = new JLabel("Word:");
-        // Word text field
-        wordField = new JTextField(10);
-        outputTextArea = new JTextArea(10, 30);
-        outputTextArea.setEditable(false);
-
-        chartTableModel = new DefaultTableModel();
-        chartTable = new JTable(chartTableModel);
-        
-        JScrollPane inputScrollPane = new JScrollPane(inputTextArea);
-        JScrollPane outputScrollPane = new JScrollPane(outputTextArea);
-        JScrollPane chartScrollPane = new JScrollPane(chartTable);
-        chartScrollPane.setPreferredSize(new Dimension(chartScrollPane.getPreferredSize().width, 100));
-        chartScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-
-        importButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                JFileChooser fileChooser = new JFileChooser();
-                int returnValue = fileChooser.showOpenDialog(null);
-                if (returnValue == JFileChooser.APPROVE_OPTION) {
-                    File filePath = fileChooser.getSelectedFile();
-                	importGrammarFromFile(filePath);
-                	checkImport=true;
-                }
-            }
-        });
-
-        checkButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-            	word =  wordField.getText();
-            	if(checkImport) {
-            		createCYKTable();
-            		implementCYK();
-                    displayResult();
-            	}
-            	else {
-            		parseInputString(inputTextArea.getText().trim());
-            	}
-            }
-        });
-
-        clearButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                clearGrammar();
-            }
-        });
-
-        leftPanel.add(importButton);
-        leftPanel.add(Box.createVerticalStrut(10)); // Add vertical strut for spacing
-        leftPanel.add(checkButton);
-        leftPanel.add(Box.createVerticalStrut(10)); // Add vertical strut for spacing
-        leftPanel.add(clearButton);
-
-        //p.setLayout(new GridLayout(2,1));
-        p.add(new JLabel("Enter the productions (in the format: variable,rule,terminal):"), BorderLayout.NORTH);
-        p.add(inputScrollPane, BorderLayout.CENTER);
-        p1.setLayout(new FlowLayout(FlowLayout.LEFT));
-        p1.add(wordLabel);
-        p1.add(wordField);
-        rightPanel.add(p, BorderLayout.NORTH);
-        rightPanel.add(p1, BorderLayout.CENTER);
-        rightPanel.add(outputScrollPane, BorderLayout.SOUTH);
-        
-        
-        panel.add(leftPanel, BorderLayout.WEST);
-        panel.add(rightPanel, BorderLayout.CENTER);
-        panel.add(chartScrollPane, BorderLayout.SOUTH);
-        frame.getContentPane().add(panel, BorderLayout.NORTH);
-
-        frame.pack();
-        frame.setVisible(true);
-    }
+//    private static void createAndShowGUI() {
+//        JFrame frame = new JFrame("CYK");
+//        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//
+//        panel = new JPanel(new BorderLayout(10,10));
+//
+//        JPanel leftPanel = new JPanel();
+//        leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.PAGE_AXIS)); // Use BoxLayout for left panel
+//
+//        JButton importButton = new JButton("Import");
+//        JButton checkButton = new JButton("Check");
+//        JButton clearButton = new JButton("Clear");
+//
+//        JPanel rightPanel = new JPanel(new BorderLayout());
+//        JPanel p = new JPanel(new BorderLayout());
+//        JPanel p1 = new JPanel();
+//
+//        inputTextArea = new JTextArea(6, 20);
+//        // Word label
+//        JLabel wordLabel = new JLabel("Word:");
+//        // Word text field
+//        wordField = new JTextField(10);
+//        outputTextArea = new JTextArea(10, 30);
+//        outputTextArea.setEditable(false);
+//
+//        chartTableModel = new DefaultTableModel();
+//        chartTable = new JTable(chartTableModel);
+//        
+//        JScrollPane inputScrollPane = new JScrollPane(inputTextArea);
+//        JScrollPane outputScrollPane = new JScrollPane(outputTextArea);
+//        JScrollPane chartScrollPane = new JScrollPane(chartTable);
+//        chartScrollPane.setPreferredSize(new Dimension(chartScrollPane.getPreferredSize().width, 100));
+//        chartScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+//
+//        importButton.addActionListener(new ActionListener() {
+//            public void actionPerformed(ActionEvent e) {
+//                JFileChooser fileChooser = new JFileChooser();
+//                int returnValue = fileChooser.showOpenDialog(null);
+//                if (returnValue == JFileChooser.APPROVE_OPTION) {
+//                    File filePath = fileChooser.getSelectedFile();
+//                	importGrammarFromFile(filePath);
+//                	checkImport=true;
+//                }
+//            }
+//        });
+//
+//        checkButton.addActionListener(new ActionListener() {
+//            public void actionPerformed(ActionEvent e) {
+//            	word =  wordField.getText();
+//            	if(checkImport) {
+//            		createCYKTable();
+//            		implementCYK();
+//                    displayResult();
+//            	}
+//            	else {
+//            		parseInputString(inputTextArea.getText().trim());
+//            	}
+//            }
+//        });
+//
+//        clearButton.addActionListener(new ActionListener() {
+//            public void actionPerformed(ActionEvent e) {
+//                clearGrammar();
+//            }
+//        });
+//
+//        leftPanel.add(importButton);
+//        leftPanel.add(Box.createVerticalStrut(10)); // Add vertical strut for spacing
+//        leftPanel.add(checkButton);
+//        leftPanel.add(Box.createVerticalStrut(10)); // Add vertical strut for spacing
+//        leftPanel.add(clearButton);
+//
+//        //p.setLayout(new GridLayout(2,1));
+//        p.add(new JLabel("Enter the productions (in the format: variable,rule,terminal):"), BorderLayout.NORTH);
+//        p.add(inputScrollPane, BorderLayout.CENTER);
+//        p1.setLayout(new FlowLayout(FlowLayout.LEFT));
+//        p1.add(wordLabel);
+//        p1.add(wordField);
+//        rightPanel.add(p, BorderLayout.NORTH);
+//        rightPanel.add(p1, BorderLayout.CENTER);
+//        rightPanel.add(outputScrollPane, BorderLayout.SOUTH);
+//        
+//        
+//        panel.add(leftPanel, BorderLayout.WEST);
+//        panel.add(rightPanel, BorderLayout.CENTER);
+//        panel.add(chartScrollPane, BorderLayout.SOUTH);
+//        frame.getContentPane().add(panel, BorderLayout.NORTH);
+//
+//        frame.pack();
+//        frame.setVisible(true);
+//    }
 
     private static void importGrammarFromFile(File filePath) {
     	 try {
