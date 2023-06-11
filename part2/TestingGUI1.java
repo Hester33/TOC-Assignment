@@ -70,7 +70,7 @@ public class TestingGUI1 {
     }
 
     private static void createAndShowGUI() {
-        JFrame frame = new JFrame("CFG Parser");
+        JFrame frame = new JFrame("CYK");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         JPanel panel = new JPanel(new BorderLayout(10,10));
@@ -87,7 +87,7 @@ public class TestingGUI1 {
         JPanel p1 = new JPanel();
 
         inputTextArea = new JTextArea(6, 20);
-     // Word label
+        // Word label
         JLabel wordLabel = new JLabel("Word:");
         // Word text field
         wordField = new JTextField(10);
@@ -97,20 +97,9 @@ public class TestingGUI1 {
         chartTableModel = new DefaultTableModel();
         chartTable = new JTable(chartTableModel);
         
-        model = new DefaultTableModel(cykTable, columnNames);
-        table = new JTable(model);
-
         JScrollPane inputScrollPane = new JScrollPane(inputTextArea);
         JScrollPane outputScrollPane = new JScrollPane(outputTextArea);
-        //JScrollPane chartScrollPane = null;
-//        if(checkImport) {
-//        	chartScrollPane = new JScrollPane(table);
-//    	}
-//    	else {
-//    		 chartScrollPane = new JScrollPane(chartTable);    	
-//    		 }
-        
-        JScrollPane chartScrollPane = new JScrollPane(table);
+        JScrollPane chartScrollPane = new JScrollPane(chartTable);
         chartScrollPane.setPreferredSize(new Dimension(chartScrollPane.getPreferredSize().width, 100));
         chartScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
@@ -119,7 +108,6 @@ public class TestingGUI1 {
                 JFileChooser fileChooser = new JFileChooser();
                 int returnValue = fileChooser.showOpenDialog(null);
                 if (returnValue == JFileChooser.APPROVE_OPTION) {
-                    //String filePath = fileChooser.getSelectedFile().getAbsolutePath();
                     File filePath = fileChooser.getSelectedFile();
                 	importGrammarFromFile(filePath);
                 	checkImport=true;
@@ -131,16 +119,13 @@ public class TestingGUI1 {
             public void actionPerformed(ActionEvent e) {
             	word =  wordField.getText();
             	if(checkImport) {
-            		System.out.print("check");
             		createCYKTable();
             		implementCYK();
                     displayResult();
-                    //System.out.print("\nword: "+word);
             	}
             	else {
             		parseInputString(inputTextArea.getText().trim());
             	}
-                
             }
         });
 
@@ -170,7 +155,6 @@ public class TestingGUI1 {
         panel.add(leftPanel, BorderLayout.WEST);
         panel.add(rightPanel, BorderLayout.CENTER);
         panel.add(chartScrollPane, BorderLayout.SOUTH);
-
         frame.getContentPane().add(panel, BorderLayout.NORTH);
 
         frame.pack();
@@ -178,24 +162,10 @@ public class TestingGUI1 {
     }
 
     private static void importGrammarFromFile(File filePath) {
-//        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-//            StringBuilder grammarBuilder = new StringBuilder();
-//            String line;
-//            while ((line = reader.readLine()) != null) {
-//                grammarBuilder.append(line).append("\n");
-//            }
-//            inputTextArea.setText(grammarBuilder.toString());
-//        } catch (IOException e) {
-//            JOptionPane.showMessageDialog(null, "Error importing grammar from file.", "Error", JOptionPane.ERROR_MESSAGE);
-//        }
     	 try {
-    		 //BufferedReader input = new BufferedReader(new FileReader(filePath));
     		 Scanner input = new Scanner(filePath);
     		 ArrayList<String> tmp = new ArrayList<>();
              int line = 2;
-             //word =  "abbbabaa";
-//             word =  wordField.getText();
-             System.out.print("\nword: "+word);
 
              terminals = new ArrayList<>();
              nonTerminals = new ArrayList<>();
@@ -234,9 +204,7 @@ public class TestingGUI1 {
                      "File Not Found", JOptionPane.ERROR_MESSAGE);
          }
     }
-    private String getWord() {
-        return wordField.getText();
-    }
+
     //--------methods for import grammar file--------//
     public static void createCYKTable (){
         int length = word.length();
@@ -251,7 +219,6 @@ public class TestingGUI1 {
                 cykTable[i][j] = "";
             }
         }
-        //return cykTable;
     }
     
     private static String[][] implementCYK() {
@@ -281,7 +248,7 @@ public class TestingGUI1 {
             return cykTable;
         }
         
-      //Step 4: Get productions for sub words with the length of 2
+      //Step 4: Get productions for sub words with the length of 3
         TreeSet<String> currentValues = new TreeSet<String>();
 
         for(int i = 3; i < cykTable.length; i++){
@@ -311,7 +278,6 @@ public class TestingGUI1 {
     	//print word and grammar
     	outputTextArea.setText("");
     	outputTextArea.append("Word: " + word);
-     	System.out.println("Word: " + word);
      	String g = "\nG = (" + terminals.toString().replace("[", "{").replace("]", "}") 
                  + ", " + nonTerminals.toString().replace("[", "{").replace("]", "}")
                  + ", P, " + startingSymbol + ")\n\nWith Productions P as: \n";
@@ -324,9 +290,9 @@ public class TestingGUI1 {
      	String p;
         //Step 4: Evaluate success.
           if(cykTable[cykTable.length-1][cykTable[cykTable.length-1].length-1].contains(startingSymbol)){
-              p = "The word \"" + word + "\" is an element of the CFG G and can be derived from it.";
+              p = "The word \"" + word + "\" is accepted by the grammar.";
           }else{
-              p = "The word \"" + word + "\" is an element of the CFG G and can be derived from it.";
+              p = "The word \"" + word + "\" is not accepted by the grammar.";
           }
         
         columnNames = new String[cykTable[0].length];
@@ -334,6 +300,7 @@ public class TestingGUI1 {
             columnNames[i] = Integer.toString(i + 1);
         }
 
+        //CYK Table
         DefaultTableModel model = new DefaultTableModel(cykTable, columnNames);
         table = new JTable(model);
         table.setEnabled(false);
@@ -377,8 +344,6 @@ public class TestingGUI1 {
     }
 
     public static String manageWord(String word, int position){
-        //if(!isTokenWord){ return Character.toString(word.charAt(position)); }
-        //return toArray(word)[position];
     	return Character.toString(word.charAt(position));
     }
 
@@ -477,8 +442,8 @@ public class TestingGUI1 {
         grammar = null;
         checkImport=false;
         inputTextArea.setText("");
+        wordField.setText("");
         outputTextArea.setText("");
         chartTableModel.setRowCount(0);
     }
-    
 }
