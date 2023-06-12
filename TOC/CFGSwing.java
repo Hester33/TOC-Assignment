@@ -1,3 +1,5 @@
+package TOC;
+
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -7,11 +9,22 @@ import java.io.FileReader;
 import java.io.IOException;
 
 public class CFGSwing {
+//    private JPanel panel; // Add panel member variable
     static int np = 0;
     static String[][] grammar;
     static JTextArea outputTextArea, inputTextArea;
     static JTable chartTable;
     static DefaultTableModel chartTableModel;
+    static JPanel panel;
+
+    public CFGSwing(JFrame frame) {
+        panel = new JPanel(new BorderLayout()); // Initialize panel with BorderLayout
+        createAndShowGUI(frame);
+    }
+
+    public JPanel getPanel() {
+        return panel;
+    }
 
     // Checks if the passed string can be derived from the grammar
     static boolean check(String a) {
@@ -39,19 +52,19 @@ public class CFGSwing {
         return to_ret;
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                createAndShowGUI();
-            }
-        });
-    }
+//    public static void main(String[] args) {
+//        SwingUtilities.invokeLater(new Runnable() {
+//            public void run() {
+//                createAndShowGUI();
+//            }
+//        });
+//    }
 
-    private static void createAndShowGUI() {
-        JFrame frame = new JFrame("CFG Parser");
+    private static void createAndShowGUI(JFrame frame) {
+
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        JPanel panel = new JPanel(new BorderLayout());
+        panel = new JPanel(new BorderLayout());
 
         JPanel leftPanel = new JPanel();
         leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.PAGE_AXIS)); // Use BoxLayout for left panel
