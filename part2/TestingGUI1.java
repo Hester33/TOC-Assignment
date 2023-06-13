@@ -21,14 +21,14 @@ public class TestingGUI1 {
     static int np = 0;
     static String[][] grammar;
     static JTextArea outputTextArea, inputTextArea;
-    private static JTextField wordField;
+    private static JTextField stringField;
     static JTable chartTable;
     static DefaultTableModel chartTableModel;
     static private JTable table;
     static DefaultTableModel model;
     
     private static String startingSymbol;
-    private static String word;
+    private static String string;
     private static ArrayList<String> terminals;
     private static ArrayList<String> nonTerminals;
     private static HashMap<String, ArrayList<String>> grammars;
@@ -38,8 +38,6 @@ public class TestingGUI1 {
     private static boolean checkImport=false;
     
 TestingGUI1(){
-//	JFrame frame = new JFrame("CYK");
-//    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
     this.panel = new JPanel(new BorderLayout(10,10));
 
@@ -55,19 +53,21 @@ TestingGUI1(){
     JPanel p1 = new JPanel();
 
     inputTextArea = new JTextArea(6, 20);
-    // Word label
-    JLabel wordLabel = new JLabel("Word:");
-    // Word text field
-    wordField = new JTextField(10);
+    // string label
+    JLabel stringLabel = new JLabel("string:");
+    // string text field
+    stringField = new JTextField(10);
     outputTextArea = new JTextArea(10, 30);
     outputTextArea.setEditable(false);
 
-    chartTableModel = new DefaultTableModel();
-    chartTable = new JTable(chartTableModel);
+//    chartTableModel = new DefaultTableModel();
+//    chartTable = new JTable(chartTableModel);
     
+     model = new DefaultTableModel();
     JScrollPane inputScrollPane = new JScrollPane(inputTextArea);
     JScrollPane outputScrollPane = new JScrollPane(outputTextArea);
-    JScrollPane chartScrollPane = new JScrollPane(chartTable);
+    JScrollPane chartScrollPane = new JScrollPane(table);
+    //JScrollPane chartScrollPane = new JScrollPane(chartTable);
     chartScrollPane.setPreferredSize(new Dimension(chartScrollPane.getPreferredSize().width, 100));
     chartScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
@@ -85,7 +85,7 @@ TestingGUI1(){
 
     checkButton.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-        	word =  wordField.getText();
+        	string =  stringField.getText();
         	if(checkImport) {
         		createCYKTable();
         		implementCYK();
@@ -113,8 +113,8 @@ TestingGUI1(){
     p.add(new JLabel("Enter the productions (in the format: variable,rule,terminal):"), BorderLayout.NORTH);
     p.add(inputScrollPane, BorderLayout.CENTER);
     p1.setLayout(new FlowLayout(FlowLayout.LEFT));
-    p1.add(wordLabel);
-    p1.add(wordField);
+    p1.add(stringLabel);
+    p1.add(stringField);
     rightPanel.add(p, BorderLayout.NORTH);
     rightPanel.add(p1, BorderLayout.CENTER);
     rightPanel.add(outputScrollPane, BorderLayout.SOUTH);
@@ -123,138 +123,10 @@ TestingGUI1(){
     this.panel.add(leftPanel, BorderLayout.WEST);
     this.panel.add(rightPanel, BorderLayout.CENTER);
     this.panel.add(chartScrollPane, BorderLayout.SOUTH);
-//    frame.getContentPane().add(this.panel, BorderLayout.NORTH);
-//
-//    frame.pack();
-//    frame.setVisible(true);
 }
     
-    // Checks if the passed string can be derived from the grammar
-    static boolean check(String a) {
-        boolean found = false;
-        for (int i = 0; i < np; i++) {
-            if (grammar[i][1].equals(a)) {
-                found = true;
-                break;
-            }
-        }
-        return found;
-    }
 
-    // Makes all possible combinations out of the two strings passed
-    static String combinat(String a, String b) {
-        String to_ret = "";
-        for (int i = 0; i < a.length(); i++) {
-            for (int j = 0; j < b.length(); j++) {
-                String temp = "" + a.charAt(i) + b.charAt(j);
-                if (check(temp)) {
-                    to_ret += grammar[0][0];
-                }
-            }
-        }
-        return to_ret;
-    }
-
-//    public static void main(String[] args) {
-//        SwingUtilities.invokeLater(new Runnable() {
-//            public void run() {
-//                createAndShowGUI();
-//            }
-//        });
-//    }
-
-//    private static void createAndShowGUI() {
-//        JFrame frame = new JFrame("CYK");
-//        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//
-//        panel = new JPanel(new BorderLayout(10,10));
-//
-//        JPanel leftPanel = new JPanel();
-//        leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.PAGE_AXIS)); // Use BoxLayout for left panel
-//
-//        JButton importButton = new JButton("Import");
-//        JButton checkButton = new JButton("Check");
-//        JButton clearButton = new JButton("Clear");
-//
-//        JPanel rightPanel = new JPanel(new BorderLayout());
-//        JPanel p = new JPanel(new BorderLayout());
-//        JPanel p1 = new JPanel();
-//
-//        inputTextArea = new JTextArea(6, 20);
-//        // Word label
-//        JLabel wordLabel = new JLabel("Word:");
-//        // Word text field
-//        wordField = new JTextField(10);
-//        outputTextArea = new JTextArea(10, 30);
-//        outputTextArea.setEditable(false);
-//
-//        chartTableModel = new DefaultTableModel();
-//        chartTable = new JTable(chartTableModel);
-//        
-//        JScrollPane inputScrollPane = new JScrollPane(inputTextArea);
-//        JScrollPane outputScrollPane = new JScrollPane(outputTextArea);
-//        JScrollPane chartScrollPane = new JScrollPane(chartTable);
-//        chartScrollPane.setPreferredSize(new Dimension(chartScrollPane.getPreferredSize().width, 100));
-//        chartScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-//
-//        importButton.addActionListener(new ActionListener() {
-//            public void actionPerformed(ActionEvent e) {
-//                JFileChooser fileChooser = new JFileChooser();
-//                int returnValue = fileChooser.showOpenDialog(null);
-//                if (returnValue == JFileChooser.APPROVE_OPTION) {
-//                    File filePath = fileChooser.getSelectedFile();
-//                	importGrammarFromFile(filePath);
-//                	checkImport=true;
-//                }
-//            }
-//        });
-//
-//        checkButton.addActionListener(new ActionListener() {
-//            public void actionPerformed(ActionEvent e) {
-//            	word =  wordField.getText();
-//            	if(checkImport) {
-//            		createCYKTable();
-//            		implementCYK();
-//                    displayResult();
-//            	}
-//            	else {
-//            		parseInputString(inputTextArea.getText().trim());
-//            	}
-//            }
-//        });
-//
-//        clearButton.addActionListener(new ActionListener() {
-//            public void actionPerformed(ActionEvent e) {
-//                clearGrammar();
-//            }
-//        });
-//
-//        leftPanel.add(importButton);
-//        leftPanel.add(Box.createVerticalStrut(10)); // Add vertical strut for spacing
-//        leftPanel.add(checkButton);
-//        leftPanel.add(Box.createVerticalStrut(10)); // Add vertical strut for spacing
-//        leftPanel.add(clearButton);
-//
-//        //p.setLayout(new GridLayout(2,1));
-//        p.add(new JLabel("Enter the productions (in the format: variable,rule,terminal):"), BorderLayout.NORTH);
-//        p.add(inputScrollPane, BorderLayout.CENTER);
-//        p1.setLayout(new FlowLayout(FlowLayout.LEFT));
-//        p1.add(wordLabel);
-//        p1.add(wordField);
-//        rightPanel.add(p, BorderLayout.NORTH);
-//        rightPanel.add(p1, BorderLayout.CENTER);
-//        rightPanel.add(outputScrollPane, BorderLayout.SOUTH);
-//        
-//        
-//        panel.add(leftPanel, BorderLayout.WEST);
-//        panel.add(rightPanel, BorderLayout.CENTER);
-//        panel.add(chartScrollPane, BorderLayout.SOUTH);
-//        frame.getContentPane().add(panel, BorderLayout.NORTH);
-//
-//        frame.pack();
-//        frame.setVisible(true);
-//    }
-
+//--------methods for import grammar file--------//
     private static void importGrammarFromFile(File filePath) {
     	 try {
     		 Scanner input = new Scanner(filePath);
@@ -299,9 +171,9 @@ TestingGUI1(){
          }
     }
 
-    //--------methods for import grammar file--------//
-    public static void createCYKTable (){
-        int length = word.length();
+
+    private static void createCYKTable (){
+        int length = string.length();
 
         cykTable = new String[length + 1][];
         cykTable[0] = new String[length];
@@ -316,10 +188,10 @@ TestingGUI1(){
     }
     
     private static String[][] implementCYK() {
-        int length = word.length();
+        int length = string.length();
       //Step 1: Fill header row
         for (int i = 0; i < cykTable[0].length; i++) {
-            cykTable[0][i] = manageWord(word, i);
+            cykTable[0][i] = managestring(string, i);
         }
       //Step 2: Get productions for terminals
         for (int i = 0; i < length; i++) {
@@ -330,7 +202,7 @@ TestingGUI1(){
         if (length <= 1) {
             return cykTable;
         }
-      //Step 3: Get productions for sub words with the length of 2
+      //Step 3: Get productions for sub strings with the length of 2
         for (int i = 0; i < cykTable[2].length - 1; i++) {
             String[] downwards = toArray(cykTable[1][i]);
             String[] diagonal = toArray(cykTable[1][i + 1]);
@@ -342,7 +214,7 @@ TestingGUI1(){
             return cykTable;
         }
         
-      //Step 4: Get productions for sub words with the length of 3
+      //Step 4: Get productions for sub strings with the length of 3
         TreeSet<String> currentValues = new TreeSet<String>();
 
         for(int i = 3; i < cykTable.length; i++){
@@ -369,9 +241,9 @@ TestingGUI1(){
     }
     
     private static void displayResult() {
-    	//print word and grammar
+    	//print string and grammar
     	outputTextArea.setText("");
-    	outputTextArea.append("Word: " + word);
+    	outputTextArea.append("string: " + string);
      	String g = "\nG = (" + terminals.toString().replace("[", "{").replace("]", "}") 
                  + ", " + nonTerminals.toString().replace("[", "{").replace("]", "}")
                  + ", P, " + startingSymbol + ")\n\nWith Productions P as: \n";
@@ -381,12 +253,13 @@ TestingGUI1(){
      		outputTextArea.append("\n");
      	}
      	
-     	String p;
-        //Step 4: Evaluate success.
+     	
+        //Evaluate if the Starting Symbol exist in the last cell of CYK table.
+     	  String s;
           if(cykTable[cykTable.length-1][cykTable[cykTable.length-1].length-1].contains(startingSymbol)){
-              p = "The word \"" + word + "\" is accepted by the grammar.";
+              s = "The string \"" + string + "\" is accepted by the grammar.";
           }else{
-              p = "The word \"" + word + "\" is not accepted by the grammar.";
+              s = "The string \"" + string + "\" is not accepted by the grammar.";
           }
         
         columnNames = new String[cykTable[0].length];
@@ -406,7 +279,7 @@ TestingGUI1(){
         chartScrollPane.setPreferredSize(new Dimension(chartScrollPane.getPreferredSize().height, 200));
         chartScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         resultFrame.add(chartScrollPane,BorderLayout.NORTH);
-        resultFrame.add(new JLabel(p),BorderLayout.CENTER);
+        resultFrame.add(new JLabel(s),BorderLayout.CENTER);
         resultFrame.pack();
         resultFrame.setVisible(true);
     }
@@ -437,8 +310,8 @@ TestingGUI1(){
         return Arrays.toString(input).replaceAll("[\\[\\]\\,]", "");
     }
 
-    public static String manageWord(String word, int position){
-    	return Character.toString(word.charAt(position));
+    public static String managestring(String string, int position){
+    	return Character.toString(string.charAt(position));
     }
 
     private static String[] toArray(String str) {
@@ -530,13 +403,39 @@ TestingGUI1(){
             outputTextArea.append("\nString \"" + str + "\" is not accepted by the grammar.");
         }
     }
+    
+    // Checks if the passed string can be derived from the grammar
+    static boolean check(String a) {
+        boolean found = false;
+        for (int i = 0; i < np; i++) {
+            if (grammar[i][1].equals(a)) {
+                found = true;
+                break;
+            }
+        }
+        return found;
+    }
+
+    // Makes all possible combinations out of the two strings passed
+    static String combinat(String a, String b) {
+        String to_ret = "";
+        for (int i = 0; i < a.length(); i++) {
+            for (int j = 0; j < b.length(); j++) {
+                String temp = "" + a.charAt(i) + b.charAt(j);
+                if (check(temp)) {
+                    to_ret += grammar[0][0];
+                }
+            }
+        }
+        return to_ret;
+    }
 
     private static void clearGrammar() {
         np = 0;
         grammar = null;
         checkImport=false;
         inputTextArea.setText("");
-        wordField.setText("");
+        stringField.setText("");
         outputTextArea.setText("");
         chartTableModel.setRowCount(0);
     }
