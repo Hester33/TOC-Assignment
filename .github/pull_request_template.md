@@ -2,8 +2,6 @@
 - @
 ### What is the new behavior?
 - i.e. Added a button to do the thing and also handled edge-cases
-### Related Trello card:
-- Please enter the whole URL so we can just click/copy it
 ### What else was added outside of the scope of the ask?
 - i.e. Simple bugfix, corrected typos, cleaned up code, etc
 ### Do ANY of these changes introduce a breaking change? (in-scope or otherwise)
