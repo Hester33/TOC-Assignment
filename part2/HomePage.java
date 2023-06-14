@@ -46,13 +46,17 @@ public class HomePage {
 
         for (int i = 0; i < members.length; i++) {
             JPanel panel_member = new JPanel();
+            JPanel member_image = new JPanel();
+            JPanel member_label = new JPanel();
             JPanel panel_memberInfo = new JPanel();
-            panel_member.setLayout(new FlowLayout(FlowLayout.LEADING, 10,10));
-            panel_memberInfo.setLayout(new GridLayout(3, 2));
+            panel_member.setLayout(new GridLayout(1, 3));
+            member_image.setLayout(new FlowLayout());
+            member_label.setLayout(new GridLayout(3, 1));
+            panel_memberInfo.setLayout(new GridLayout(3, 1));
 
             ImagePanel image = new ImagePanel(members[i].image);
-            image.setPreferredSize(new Dimension(50, 50));
-            panel_member.add(image);
+            image.setPreferredSize(new Dimension(60, 60));
+            member_image.add(image);
 
             JLabel idLabel = new JLabel("Student ID:   ");
             JLabel id = new JLabel(members[i].id);
@@ -60,13 +64,14 @@ public class HomePage {
             JLabel name = new JLabel(members[i].name);
             JLabel participationLabel = new JLabel("Participation:   ");
             JLabel participation = new JLabel(members[i].participation);
-            panel_memberInfo.add(idLabel);
+            member_label.add(idLabel);
             panel_memberInfo.add(id);
-            panel_memberInfo.add(nameLabel);
+            member_label.add(nameLabel);
             panel_memberInfo.add(name);
-            panel_memberInfo.add(participationLabel);
+            member_label.add(participationLabel);
             panel_memberInfo.add(participation);
-
+            panel_member.add(member_image);
+            panel_member.add(member_label);
             panel_member.add(panel_memberInfo);
             panel_member.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
             this.panel_members.add(panel_member);
