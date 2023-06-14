@@ -24,7 +24,7 @@ public class TestingGUI1 {
     private static JTextField stringField;
     static JTable chartTable;
     static DefaultTableModel chartTableModel;
-    static private JTable table;
+    static JTable table;
     static DefaultTableModel model;
     
     private static String startingSymbol;
@@ -54,7 +54,7 @@ TestingGUI1(){
 
     inputTextArea = new JTextArea(6, 20);
     // string label
-    JLabel stringLabel = new JLabel("string:");
+    JLabel stringLabel = new JLabel("String:");
     // string text field
     stringField = new JTextField(10);
     outputTextArea = new JTextArea(10, 30);
@@ -64,11 +64,12 @@ TestingGUI1(){
 //    chartTable = new JTable(chartTableModel);
     
      model = new DefaultTableModel();
+    table = new JTable(model);
     JScrollPane inputScrollPane = new JScrollPane(inputTextArea);
     JScrollPane outputScrollPane = new JScrollPane(outputTextArea);
     JScrollPane chartScrollPane = new JScrollPane(table);
     //JScrollPane chartScrollPane = new JScrollPane(chartTable);
-    chartScrollPane.setPreferredSize(new Dimension(chartScrollPane.getPreferredSize().width, 100));
+    chartScrollPane.setPreferredSize(new Dimension(chartScrollPane.getPreferredSize().height, 200));
     chartScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
     importButton.addActionListener(new ActionListener() {
@@ -255,12 +256,13 @@ TestingGUI1(){
      	
      	
         //Evaluate if the Starting Symbol exist in the last cell of CYK table.
-     	  String s;
+     	  String str;
           if(cykTable[cykTable.length-1][cykTable[cykTable.length-1].length-1].contains(startingSymbol)){
-              s = "The string \"" + string + "\" is accepted by the grammar.";
+        	  str = "The string \"" + string + "\" is accepted by the grammar.";
           }else{
-              s = "The string \"" + string + "\" is not accepted by the grammar.";
+              str = "The string \"" + string + "\" is not accepted by the grammar.";
           }
+          outputTextArea.append("\n"+str);
         
         columnNames = new String[cykTable[0].length];
         for (int i = 0; i < columnNames.length; i++) {
@@ -268,20 +270,8 @@ TestingGUI1(){
         }
 
         //CYK Table
-        DefaultTableModel model = new DefaultTableModel(cykTable, columnNames);
-        table = new JTable(model);
-        table.setEnabled(false);
-
-        JFrame resultFrame = new JFrame();
-        resultFrame.setTitle("CYK Table");
-        resultFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        JScrollPane chartScrollPane = new JScrollPane(table);
-        chartScrollPane.setPreferredSize(new Dimension(chartScrollPane.getPreferredSize().height, 200));
-        chartScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        resultFrame.add(chartScrollPane,BorderLayout.NORTH);
-        resultFrame.add(new JLabel(s),BorderLayout.CENTER);
-        resultFrame.pack();
-        resultFrame.setVisible(true);
+         model = new DefaultTableModel(cykTable, columnNames);
+        table.setModel(model);
     }
 
     private static String[] checkIfProduces(String[] toCheck) {
@@ -313,7 +303,8 @@ TestingGUI1(){
     public static String managestring(String string, int position){
     	return Character.toString(string.charAt(position));
     }
-
+    
+    //Splits a string into an array of strings by whitespace
     private static String[] toArray(String str) {
         return str.split("\\s");
     }
@@ -437,6 +428,8 @@ TestingGUI1(){
         inputTextArea.setText("");
         stringField.setText("");
         outputTextArea.setText("");
-        chartTableModel.setRowCount(0);
+        //chartTableModel.setRowCount(0);
+        model.setRowCount(0);
+        model.setColumnCount(0);
     }
 }
