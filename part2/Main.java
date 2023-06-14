@@ -2,7 +2,6 @@ package part2;
 
 import javax.swing.*;
 import java.awt.event.*;
-//import part2.HomePage;
 
 public class Main extends JFrame implements KeyListener {
     Main() {
@@ -11,8 +10,8 @@ public class Main extends JFrame implements KeyListener {
         setFocusable(true);
         JFrame mainFrame = new JFrame();
         HomePage home = new HomePage();
-        CYK testing = new CYK();
-//        Help help = new Help();
+        CYK cyk = new CYK();
+        Help help = new Help();
 
         // Layout setup
 
@@ -20,11 +19,10 @@ public class Main extends JFrame implements KeyListener {
         JTabbedPane tabbedPane = new JTabbedPane();
         mainFrame.add(tabbedPane);
         tabbedPane.add("Home", home.panel);
-        tabbedPane.add("CYK", testing.panel);
-//        tabbedPane.add("Help", help.panel);
+        tabbedPane.add("CYK", cyk.panel);
+        tabbedPane.add("Help", help.panel);
 
         // Window setup
-        //mainFrame.setSize(400, 500);
         mainFrame.pack();
         mainFrame.setLocationRelativeTo(null);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
