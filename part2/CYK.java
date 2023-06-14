@@ -15,15 +15,11 @@ import java.util.HashMap;
 import java.util.Scanner;
 import java.util.TreeSet;
 
-public class TestingGUI1 {
+public class CYK {
 	 JPanel panel = new JPanel();
 	
-    static int np = 0;
-    static String[][] grammar;
     static JTextArea outputTextArea, inputTextArea;
     private static JTextField stringField;
-    static JTable chartTable;
-    static DefaultTableModel chartTableModel;
     static JTable table;
     static DefaultTableModel model;
     
@@ -37,7 +33,7 @@ public class TestingGUI1 {
     
     private static boolean checkImport=false;
     
-TestingGUI1(){
+    CYK(){
 
     this.panel = new JPanel(new BorderLayout(10,10));
 
@@ -53,22 +49,17 @@ TestingGUI1(){
     JPanel p1 = new JPanel();
 
     inputTextArea = new JTextArea(6, 20);
-    // string label
     JLabel stringLabel = new JLabel("String:");
-    // string text field
     stringField = new JTextField(10);
     outputTextArea = new JTextArea(10, 30);
     outputTextArea.setEditable(false);
 
-//    chartTableModel = new DefaultTableModel();
-//    chartTable = new JTable(chartTableModel);
     
      model = new DefaultTableModel();
     table = new JTable(model);
     JScrollPane inputScrollPane = new JScrollPane(inputTextArea);
     JScrollPane outputScrollPane = new JScrollPane(outputTextArea);
     JScrollPane chartScrollPane = new JScrollPane(table);
-    //JScrollPane chartScrollPane = new JScrollPane(chartTable);
     chartScrollPane.setPreferredSize(new Dimension(chartScrollPane.getPreferredSize().height, 200));
     chartScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
@@ -87,14 +78,13 @@ TestingGUI1(){
     checkButton.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
         	string =  stringField.getText();
-        	if(checkImport) {
-        		createCYKTable();
-        		implementCYK();
-                displayResult();
+        	if(!checkImport) {
+        		getInput(inputTextArea.getText().trim());
         	}
-        	else {
-        		parseInputString(inputTextArea.getText().trim());
-        	}
+        	createCYKTable();
+    		implementCYK();
+            displayResult();
+            checkImport=false;
         }
     });
 
@@ -111,7 +101,7 @@ TestingGUI1(){
     leftPanel.add(clearButton);
 
     //p.setLayout(new GridLayout(2,1));
-    p.add(new JLabel("Enter the productions (in the format: variable,rule,terminal):"), BorderLayout.NORTH);
+    p.add(new JLabel("Enter the productions (Format: startingSymbol, terminal, non-terminal, grammar):"), BorderLayout.NORTH);
     p.add(inputScrollPane, BorderLayout.CENTER);
     p1.setLayout(new FlowLayout(FlowLayout.LEFT));
     p1.add(stringLabel);
@@ -120,12 +110,49 @@ TestingGUI1(){
     rightPanel.add(p1, BorderLayout.CENTER);
     rightPanel.add(outputScrollPane, BorderLayout.SOUTH);
     
-    
     this.panel.add(leftPanel, BorderLayout.WEST);
     this.panel.add(rightPanel, BorderLayout.CENTER);
     this.panel.add(chartScrollPane, BorderLayout.SOUTH);
 }
-    
+
+//--------methods for get user input--------//
+private static void getInput(String input) {
+	//get the text from text area
+	String[] lines = input.split("\n");
+	ArrayList<String> tmp = new ArrayList<>();
+	int line = 2;
+
+	terminals = new ArrayList<>();
+	nonTerminals = new ArrayList<>();
+	grammars = new HashMap<>();
+	
+	startingSymbol = lines[0];
+	
+	int i=1;
+	while (line <= 3) {
+	    tmp.addAll(Arrays.asList(toArray(lines[i])));
+	    if (line == 2) {
+	        terminals.addAll(tmp);
+	    }
+	    if (line == 3) {
+	        nonTerminals.addAll(tmp);
+	    }
+	    tmp.clear();
+	    line++;
+	    i++;
+	}
+
+	i=3;
+	while (i < lines.length) {
+	    tmp.addAll(Arrays.asList(toArray(lines[i])));
+	    String leftSide = tmp.get(0);
+	    tmp.remove(0);
+	    grammars.put(leftSide, new ArrayList<>(tmp));
+	    tmp.clear();
+	    i++;
+		}
+	}
+
 
 //--------methods for import grammar file--------//
     private static void importGrammarFromFile(File filePath) {
@@ -161,8 +188,11 @@ TestingGUI1(){
              }
              input.close();
              inputTextArea.setText("");
+             inputTextArea.append(startingSymbol);
+             inputTextArea.append("\n"+terminals.toString().replaceAll("[\\[\\]\\,]", ""));
+             inputTextArea.append("\n"+nonTerminals.toString().replaceAll("[\\[\\]\\,]", "")+"\n");
          	for(String s: grammars.keySet()){
-         		inputTextArea.append(s + " -> " + grammars.get(s).toString().replaceAll("[\\[\\]\\,]", "").replaceAll("\\s", " |"));
+         		inputTextArea.append(s +" "+ grammars.get(s).toString().replaceAll("[\\[\\]\\,]", ""));
          		inputTextArea.append("\n");
          	}
              
@@ -214,7 +244,6 @@ TestingGUI1(){
         if (length <= 2) {
             return cykTable;
         }
-        
       //Step 4: Get productions for sub strings with the length of 3
         TreeSet<String> currentValues = new TreeSet<String>();
 
@@ -244,7 +273,7 @@ TestingGUI1(){
     private static void displayResult() {
     	//print string and grammar
     	outputTextArea.setText("");
-    	outputTextArea.append("string: " + string);
+    	outputTextArea.append("String: " + string);
      	String g = "\nG = (" + terminals.toString().replace("[", "{").replace("]", "}") 
                  + ", " + nonTerminals.toString().replace("[", "{").replace("]", "}")
                  + ", P, " + startingSymbol + ")\n\nWith Productions P as: \n";
@@ -286,6 +315,7 @@ TestingGUI1(){
         return storage.toArray(new String[0]);
     }
 
+ // Generates all possible combinations out of the two strings passed
     private static String[] getAllCombinations(String[] array1, String[] array2) {
         ArrayList<String> combinations = new ArrayList<>();
         for (String s1 : array1) {
@@ -309,126 +339,10 @@ TestingGUI1(){
         return str.split("\\s");
     }
 
-  //--------methods for user input grammar--------//
-    private static void parseInputString(String input) {
-    	
-    	outputTextArea.setText("");
-        String[] lines = input.split("\n");
-        np = lines.length;
-        grammar = new String[np][3];
-        outputTextArea.setText("");
-
-        outputTextArea.append("\nEntered Productions:\n");
-        for (int i = 0; i < np; i++) {
-            outputTextArea.append(lines[i] + "\n");
-            String[] parts = lines[i].split(",");
-            for (int j = 0; j < 3; j++) {
-                grammar[i][j] = parts[j].trim();
-            }
-        }
-
-        String start = grammar[0][0];
-        String str = JOptionPane.showInputDialog(null, "Enter the string to be checked:");
-
-        if (str == null || str.trim().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "No string entered.", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        int len = str.length();
-        String[][] chart = new String[len][len];
-
-        // Initialize the chart with empty strings
-        for (int i = 0; i < len; i++) {
-            for (int j = 0; j < len; j++) {
-                chart[i][j] = "";
-            }
-        }
-
-        // Fill the diagonal of the chart
-        for (int i = 0; i < len; i++) {
-            String terminal = String.valueOf(str.charAt(i));
-            for (int j = 0; j < np; j++) {
-                if (grammar[j][2].equals(terminal)) {
-                    chart[i][i] += grammar[j][0];
-                }
-            }
-        }
-
-        // Fill the rest of the chart
-        for (int l = 2; l <= len; l++) {
-            for (int i = 0; i <= len - l; i++) {
-                int j = i + l - 1;
-                for (int k = i; k < j; k++) {
-                    chart[i][j] += combinat(chart[i][k], chart[k + 1][j]);
-                }
-            }
-        }
-
-        // Check if the start symbol is present in the top-right cell of the chart
-        boolean accepted = chart[0][len - 1].contains(start);
-
-        // Update the CYK chart table
-        String[] columnNames = new String[len + 1];
-        columnNames[0] = "";
-        for (int i = 0; i < len; i++) {
-            columnNames[i + 1] = String.valueOf(str.charAt(i));
-        }
-        chartTableModel.setColumnIdentifiers(columnNames);
-        chartTableModel.setRowCount(len);
-        for (int i = 0; i < len; i++) {
-            int columnWidth = Math.max(30, chartTable.getParent().getWidth() / (len + 1)); // Calculate column width
-            chartTable.getColumnModel().getColumn(i + 1).setPreferredWidth(columnWidth);
-            chartTable.getColumnModel().getColumn(i + 1).setMaxWidth(columnWidth);
-            chartTable.getColumnModel().getColumn(i + 1).setResizable(false);
-            chartTable.setValueAt(str.charAt(i), i, 0);
-            for (int j = 0; j < len - i; j++) {
-                chartTable.setValueAt(chart[j][j + i], j, i + 1);
-            }
-        }
-
-        // Print the result
-        if (accepted) {
-            outputTextArea.append("\nString \"" + str + "\" is accepted by the grammar.");
-        } else {
-            outputTextArea.append("\nString \"" + str + "\" is not accepted by the grammar.");
-        }
-    }
-    
-    // Checks if the passed string can be derived from the grammar
-    static boolean check(String a) {
-        boolean found = false;
-        for (int i = 0; i < np; i++) {
-            if (grammar[i][1].equals(a)) {
-                found = true;
-                break;
-            }
-        }
-        return found;
-    }
-
-    // Makes all possible combinations out of the two strings passed
-    static String combinat(String a, String b) {
-        String to_ret = "";
-        for (int i = 0; i < a.length(); i++) {
-            for (int j = 0; j < b.length(); j++) {
-                String temp = "" + a.charAt(i) + b.charAt(j);
-                if (check(temp)) {
-                    to_ret += grammar[0][0];
-                }
-            }
-        }
-        return to_ret;
-    }
-
     private static void clearGrammar() {
-        np = 0;
-        grammar = null;
-        checkImport=false;
         inputTextArea.setText("");
         stringField.setText("");
         outputTextArea.setText("");
-        //chartTableModel.setRowCount(0);
         model.setRowCount(0);
         model.setColumnCount(0);
     }
