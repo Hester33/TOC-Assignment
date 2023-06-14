@@ -11,7 +11,7 @@ public class Main extends JFrame implements KeyListener {
         setFocusable(true);
         JFrame mainFrame = new JFrame();
         HomePage home = new HomePage();
-        TestingGUI1 testing = new TestingGUI1();
+        CYK testing = new CYK();
 //        Help help = new Help();
 
         // Layout setup
@@ -20,7 +20,7 @@ public class Main extends JFrame implements KeyListener {
         JTabbedPane tabbedPane = new JTabbedPane();
         mainFrame.add(tabbedPane);
         tabbedPane.add("Home", home.panel);
-        tabbedPane.add("test", testing.panel);
+        tabbedPane.add("CYK", testing.panel);
 //        tabbedPane.add("Help", help.panel);
 
         // Window setup
