@@ -17,7 +17,7 @@ public class part_one_gui {
     private JPanel button_panel;
     private JButton import_button = new JButton("Import");
     private JButton clear_button = new JButton("Clear");
-    private JButton generate_button = new JButton("Generate RG");
+    private JButton generate_button = new JButton("Generate Output");
     
     private JPanel input_panel;
     private static JTextArea input_box;
@@ -89,27 +89,29 @@ public class part_one_gui {
 
         import_button.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                input_file_browser = new JFileChooser();
-                
-                int return_value = input_file_browser.showOpenDialog(null);
-                if (return_value == JFileChooser.APPROVE_OPTION) {
-                    File file_path = input_file_browser.getSelectedFile();
-                    import_from_file(file_path);
-                    String states_string = string_builder(states);
-                    String alphabets_string = string_builder(alphabets);
-                    String final_states_string = string_builder(final_states);
+                if (!has_imported) {
+                    input_file_browser = new JFileChooser();
+                    
+                    int return_value = input_file_browser.showOpenDialog(null);
+                    if (return_value == JFileChooser.APPROVE_OPTION) {
+                        File file_path = input_file_browser.getSelectedFile();
+                        import_from_file(file_path);
+                        String states_string = string_builder(states);
+                        String alphabets_string = string_builder(alphabets);
+                        String final_states_string = string_builder(final_states);
 
-                    input_box.append(states_string.toString() + "\n");
-                    input_box.append(alphabets_string.toString() + "\n");
-                    input_box.append(String.format("P0 = %s\n", start_state));
-                    input_box.append(final_states_string.toString() + "\n");
+                        input_box.append(states_string.toString() + "\n");
+                        input_box.append(alphabets_string.toString() + "\n");
+                        input_box.append(String.format("P0 = %s\n", start_state));
+                        input_box.append(final_states_string.toString() + "\n");
 
-                    input_box.append("\nStrings to be checked:\n");
-                    for (int i = 0; i < test_strings.size(); i++) {
-                        input_box.append(test_strings.get(i) + "\n");
+                        input_box.append("\nStrings to be checked:\n");
+                        for (int i = 0; i < test_strings.size(); i++) {
+                            input_box.append(test_strings.get(i) + "\n");
+                        }
+
+                        has_imported = true;
                     }
-
-                    has_imported = true;
                 }
             }
         });
