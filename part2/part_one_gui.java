@@ -26,7 +26,7 @@ public class part_one_gui {
     private JFileChooser input_file_browser;
     
     private JPanel output_panel;
-    private JTextArea output_box;
+    private static JTextArea output_box;
     private JLabel output_label;
     private JScrollPane output_scroll;
 
@@ -137,7 +137,7 @@ public class part_one_gui {
 
         clear_button.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-
+                clear_io();
             }
         });
 
@@ -201,13 +201,6 @@ public class part_one_gui {
             JOptionPane.showMessageDialog(null, "File not found.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-
-    /*private static Set<String> states;
-    private static Set<String> alphabets;
-    private static String start_state;
-    private static Set<String> final_states;
-    private static java.util.List<String> test_strings;
-    private static Map<String, Map<String, String>> transition_map;*/
 
     private static Map<String, String> rg_conversion() {
         Map<String, String> regular_grammar = new HashMap<>();
@@ -278,5 +271,16 @@ public class part_one_gui {
         }
         
         return false;
+    }
+
+    private static void clear_io() {
+        input_box.setText("");
+        output_box.setText("");
+        states = null;
+        alphabets = null;
+        start_state = null;
+        final_states = null;
+        test_strings = null;
+        transition_map = null;
     }
 }
