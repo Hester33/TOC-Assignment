@@ -21,8 +21,8 @@ public class Main extends JFrame implements KeyListener {
         JTabbedPane tabbedPane = new JTabbedPane();
         mainFrame.add(tabbedPane);
         tabbedPane.add("Home", home.panel);
-        tabbedPane.add("test", testing.panel);
         tabbedPane.add("FA to RG", fa_to_rg_gui.panel);
+        tabbedPane.add("test", testing.panel);
 //        tabbedPane.add("Help", help.panel);
 
         // Window setup
