@@ -30,6 +30,7 @@ public class part_one_gui {
     private JLabel output_label;
     private JScrollPane output_scroll;
 
+    private static boolean has_imported = false;
     private static Set<String> states;
     private static Set<String> alphabets;
     private static String start_state;
@@ -94,43 +95,21 @@ public class part_one_gui {
                 if (return_value == JFileChooser.APPROVE_OPTION) {
                     File file_path = input_file_browser.getSelectedFile();
                     import_from_file(file_path);
-                }
+                    String states_string = string_builder(states);
+                    String alphabets_string = string_builder(alphabets);
+                    String final_states_string = string_builder(final_states);
 
-                StringBuilder states_string = new StringBuilder();
-                states_string.append("Q = ").append(OPEN_BRACKET);
-                for (String state : states) {
-                    states_string.append(String.format("%s, ", state));
-                }
-                states_string.deleteCharAt(states_string.length() - 1);
-                states_string.deleteCharAt(states_string.length() - 1);
-                states_string.append(CLOSE_BRACKET);
+                    input_box.append(states_string.toString() + "\n");
+                    input_box.append(alphabets_string.toString() + "\n");
+                    input_box.append(String.format("P0 = %s\n", start_state));
+                    input_box.append(final_states_string.toString() + "\n");
 
-                StringBuilder alphabets_string = new StringBuilder();
-                alphabets_string.append("E = ").append(OPEN_BRACKET);
-                for (String alphabet : alphabets) {
-                    alphabets_string.append(String.format("%s, ", alphabet));
-                }
-                alphabets_string.deleteCharAt(alphabets_string.length() - 1);
-                alphabets_string.deleteCharAt(alphabets_string.length() - 1);
-                alphabets_string.append(CLOSE_BRACKET);
+                    input_box.append("\nStrings to be checked:\n");
+                    for (int i = 0; i < test_strings.size(); i++) {
+                        input_box.append(test_strings.get(i) + "\n");
+                    }
 
-                StringBuilder final_states_string = new StringBuilder();
-                final_states_string.append(String.format("F = ")).append(OPEN_BRACKET);
-                for (String final_state : final_states) {
-                    final_states_string.append(String.format("%s, ", final_state));
-                }
-                final_states_string.deleteCharAt(final_states_string.length() - 1);
-                final_states_string.deleteCharAt(final_states_string.length() - 1);
-                final_states_string.append(CLOSE_BRACKET);
-
-                input_box.append(states_string.toString() + "\n");
-                input_box.append(alphabets_string.toString() + "\n");
-                input_box.append(String.format("P0 = %s\n", start_state));
-                input_box.append(final_states_string.toString() + "\n");
-
-                input_box.append("\nStrings to be checked:\n");
-                for (int i = 0; i < test_strings.size(); i++) {
-                    input_box.append(test_strings.get(i) + "\n");
+                    has_imported = true;
                 }
             }
         });
@@ -143,18 +122,20 @@ public class part_one_gui {
 
         generate_button.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                output_box.append("Regular Grammar:\n");
+                if (has_imported) {
+                    Map<String, String> regular_grammar = rg_conversion();
+                    
+                    output_box.append("Regular Grammar:\n");
 
-                Map<String, String> regular_grammar = rg_conversion();
+                    for (String state : regular_grammar.keySet()) {
+                        output_box.append(String.format("%s %s %s\n", state, ARROW, regular_grammar.get(state)));
+                    }
 
-                for (String state : regular_grammar.keySet()) {
-                    output_box.append(String.format("%s %s %s\n", state, ARROW, regular_grammar.get(state)));
-                }
-
-                output_box.append("\nThe results after checking the strings are:\n");
-                for (String test_string : test_strings) {
-                    boolean isAccepted = check_string(test_string.trim(), regular_grammar);
-                    output_box.append(test_string + ": " + (isAccepted ? "OK\n" : "NO\n")); 
+                    output_box.append("\nThe results after checking the strings are:\n");
+                    for (String test_string : test_strings) {
+                        boolean isAccepted = check_string(test_string.trim(), regular_grammar);
+                        output_box.append(test_string + ": " + (isAccepted ? "OK\n" : "NO\n")); 
+                    }
                 }
             }
         });
@@ -282,5 +263,20 @@ public class part_one_gui {
         final_states = null;
         test_strings = null;
         transition_map = null;
+        has_imported = false;
+    }
+
+    public static String string_builder (Set<String> target_states) {
+        StringBuilder string = new StringBuilder();
+        string.append(String.format("F = ")).append(OPEN_BRACKET);
+        for (String state : target_states) {
+            string.append(String.format("%s, ", state));
+        }
+
+        string.deleteCharAt(string.length() - 1);
+        string.deleteCharAt(string.length() - 1);
+        string.append(CLOSE_BRACKET);
+        
+        return string.toString();
     }
 }
