@@ -55,7 +55,7 @@ public class CYK {
     outputTextArea.setEditable(false);
 
     
-     model = new DefaultTableModel();
+    model = new DefaultTableModel();
     table = new JTable(model);
     JScrollPane inputScrollPane = new JScrollPane(inputTextArea);
     JScrollPane outputScrollPane = new JScrollPane(outputTextArea);
@@ -100,7 +100,6 @@ public class CYK {
     leftPanel.add(Box.createVerticalStrut(10)); // Add vertical strut for spacing
     leftPanel.add(clearButton);
 
-    //p.setLayout(new GridLayout(2,1));
     p.add(new JLabel("Enter the productions (Format: startingSymbol, terminal, non-terminal, grammar):"), BorderLayout.NORTH);
     p.add(inputScrollPane, BorderLayout.CENTER);
     p1.setLayout(new FlowLayout(FlowLayout.LEFT));

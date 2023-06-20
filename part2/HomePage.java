@@ -39,8 +39,8 @@ public class HomePage {
 
         // MEMBERS
         // TODO: add member photos
-        Member[] members = { new Member("1181203140", "Ong Wen Xuan", "part2/assets/images/java.png", "25%"),
-                new Member("1181203056", "Elton Wong Chun Meng", "part2/assets/images/java.png", "25%"),
+        Member[] members = { new Member("1181203140", "Ong Wen Xuan", "part2/assets/images/hester.jpg", "25%"),
+                new Member("1181203056", "Elton Wong Chun Meng", "part2/assets/images/painPosition.png", "25%"),
                 new Member("1181203212", "Reynard Kok Jin Yik", "part2/assets/images/java.png", "25%"), 
                 new Member("1191102550", "Ng Zhi Shuen", "part2/assets/images/java.png", "25%"), };
 
@@ -55,7 +55,7 @@ public class HomePage {
             panel_memberInfo.setLayout(new GridLayout(3, 1));
 
             ImagePanel image = new ImagePanel(members[i].image);
-            image.setPreferredSize(new Dimension(60, 60));
+            image.setPreferredSize(new Dimension(80, 80));
             member_image.add(image);
 
             JLabel idLabel = new JLabel("Student ID:   ");
@@ -78,6 +78,8 @@ public class HomePage {
         }
         this.panel_header.setBorder(BorderFactory.createRaisedBevelBorder());
         this.panel_header.setPreferredSize(new Dimension(100, 70));
+        
         this.panel.add(this.panel_members);
+        this.panel_members.setPreferredSize(new Dimension(200, 70));
     }
 }
