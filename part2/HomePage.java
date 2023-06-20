@@ -39,20 +39,24 @@ public class HomePage {
 
         // MEMBERS
         // TODO: add member photos
-        Member[] members = { new Member("1181203140", "Ong Wen Xuan", "part2/assets/images/java.png", "25%"),
-                new Member("1181203056", "Elton Wong Chun Meng", "part2/assets/images/java.png", "25%"),
+        Member[] members = { new Member("1181203140", "Ong Wen Xuan", "part2/assets/images/hester.jpg", "25%"),
+                new Member("1181203056", "Elton Wong Chun Meng", "part2/assets/images/painPosition.png", "25%"),
                 new Member("1181203212", "Reynard Kok Jin Yik", "part2/assets/images/java.png", "25%"), 
                 new Member("1191102550", "Ng Zhi Shuen", "part2/assets/images/java.png", "25%"), };
 
         for (int i = 0; i < members.length; i++) {
             JPanel panel_member = new JPanel();
+            JPanel member_image = new JPanel();
+            JPanel member_label = new JPanel();
             JPanel panel_memberInfo = new JPanel();
-            panel_member.setLayout(new FlowLayout(FlowLayout.LEADING, 10,10));
-            panel_memberInfo.setLayout(new GridLayout(3, 2));
+            panel_member.setLayout(new GridLayout(1, 3));
+            member_image.setLayout(new FlowLayout());
+            member_label.setLayout(new GridLayout(3, 1));
+            panel_memberInfo.setLayout(new GridLayout(3, 1));
 
             ImagePanel image = new ImagePanel(members[i].image);
-            image.setPreferredSize(new Dimension(50, 50));
-            panel_member.add(image);
+            image.setPreferredSize(new Dimension(80, 80));
+            member_image.add(image);
 
             JLabel idLabel = new JLabel("Student ID:   ");
             JLabel id = new JLabel(members[i].id);
@@ -60,19 +64,22 @@ public class HomePage {
             JLabel name = new JLabel(members[i].name);
             JLabel participationLabel = new JLabel("Participation:   ");
             JLabel participation = new JLabel(members[i].participation);
-            panel_memberInfo.add(idLabel);
+            member_label.add(idLabel);
             panel_memberInfo.add(id);
-            panel_memberInfo.add(nameLabel);
+            member_label.add(nameLabel);
             panel_memberInfo.add(name);
-            panel_memberInfo.add(participationLabel);
+            member_label.add(participationLabel);
             panel_memberInfo.add(participation);
-
+            panel_member.add(member_image);
+            panel_member.add(member_label);
             panel_member.add(panel_memberInfo);
             panel_member.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
             this.panel_members.add(panel_member);
         }
         this.panel_header.setBorder(BorderFactory.createRaisedBevelBorder());
         this.panel_header.setPreferredSize(new Dimension(100, 70));
+        
         this.panel.add(this.panel_members);
+        this.panel_members.setPreferredSize(new Dimension(200, 70));
     }
 }

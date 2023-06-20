@@ -2,7 +2,6 @@ package part2;
 
 import javax.swing.*;
 import java.awt.event.*;
-//import part2.HomePage;
 
 public class Main extends JFrame implements KeyListener {
     Main() {
@@ -11,9 +10,11 @@ public class Main extends JFrame implements KeyListener {
         setFocusable(true);
         JFrame mainFrame = new JFrame();
         HomePage home = new HomePage();
-        TestingGUI1 testing = new TestingGUI1();
+
+        CYK cyk = new CYK();
         part_one_gui fa_to_rg_gui = new part_one_gui();
-//        Help help = new Help();
+        Help help = new Help();
+
 
         // Layout setup
 
@@ -21,12 +22,13 @@ public class Main extends JFrame implements KeyListener {
         JTabbedPane tabbedPane = new JTabbedPane();
         mainFrame.add(tabbedPane);
         tabbedPane.add("Home", home.panel);
+
+        tabbedPane.add("CYK", cyk.panel);
         tabbedPane.add("FA to RG", fa_to_rg_gui.panel);
-        tabbedPane.add("test", testing.panel);
-//        tabbedPane.add("Help", help.panel);
+        tabbedPane.add("Help", help.panel);
+
 
         // Window setup
-        //mainFrame.setSize(400, 500);
         mainFrame.pack();
         mainFrame.setLocationRelativeTo(null);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
