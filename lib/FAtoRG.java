@@ -3,12 +3,8 @@ package lib;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.*;
 
 public class FAtoRG {
@@ -124,6 +120,8 @@ public class FAtoRG {
 
         generate_button.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                String data = input_box.getText().trim();
+                
                 if (has_imported) {
                     Map<String, String> regular_grammar = rg_conversion();
                     
@@ -138,6 +136,10 @@ public class FAtoRG {
                         boolean isAccepted = check_string(test_string.trim(), regular_grammar);
                         output_box.append(test_string + ": " + (isAccepted ? "OK\n" : "NO\n")); 
                     }
+                }
+
+                else if (!data.equals("")) {
+                    parse_manual_input(input_box.getText().trim());
                 }
             }
         });
@@ -280,5 +282,57 @@ public class FAtoRG {
         string.append(CLOSE_BRACKET);
         
         return string.toString();
+    }
+
+    public static void parse_manual_input(String input) {
+        String[] imported_lines = input.split("\n");
+
+        String imported_states = imported_lines[0];
+        states = new HashSet<>(Arrays.asList(imported_states.split(",")));
+
+        String imported_alphabets = imported_lines[1];
+        alphabets = new HashSet<>(Arrays.asList(imported_alphabets.split(",")));
+
+        start_state = imported_lines[2];
+
+        String imported_final_states = imported_lines[3];
+        final_states = new HashSet<>(Arrays.asList(imported_final_states.split(",")));
+    
+        String imported_transition;
+        int transition_table_start = 4;
+        int transition_table_end = imported_lines.length - 2;
+        transition_map = new HashMap<>();
+        for (int i = transition_table_start; i < transition_table_end; i++) {
+            imported_transition = imported_lines[i];
+
+            if (imported_transition.equalsIgnoreCase("done")) {
+                break;
+            }
+
+            String[] transitionParts = imported_transition.split(",");
+            String currentState = transitionParts[0].trim();
+            String inputSymbol = transitionParts[1].trim();
+            String nextState = transitionParts[2].trim();
+
+            transition_map.putIfAbsent(currentState, new HashMap<>());
+            transition_map.get(currentState).put(inputSymbol, nextState);
+        }
+
+        String imported_test_strings = imported_lines[imported_lines.length - 1];
+        test_strings = Arrays.asList(imported_test_strings.split(","));
+
+        Map<String, String> regular_grammar = rg_conversion();
+                    
+        output_box.append("Regular Grammar:\n");
+
+        for (String state : regular_grammar.keySet()) {
+            output_box.append(String.format("%s %s %s\n", state, ARROW, regular_grammar.get(state)));
+        }
+
+        output_box.append("\nThe results after checking the strings are:\n");
+        for (String test_string : test_strings) {
+            boolean isAccepted = check_string(test_string.trim(), regular_grammar);
+            output_box.append(test_string + ": " + (isAccepted ? "OK\n" : "NO\n")); 
+        }
     }
 }
