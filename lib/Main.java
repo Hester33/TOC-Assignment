@@ -1,4 +1,4 @@
-package part2;
+package lib;
 
 import javax.swing.*;
 import java.awt.event.*;
@@ -12,7 +12,7 @@ public class Main extends JFrame implements KeyListener {
         HomePage home = new HomePage();
 
         CYK cyk = new CYK();
-        part_one_gui fa_to_rg_gui = new part_one_gui();
+        FAtoRG fa_to_rg_gui = new FAtoRG();
         Help help = new Help();
 
 

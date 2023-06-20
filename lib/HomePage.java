@@ -1,4 +1,4 @@
-package part2;
+package lib;
 
 //import java.awt.Color;
 //import java.awt.Dimension;
@@ -13,7 +13,7 @@ import java.awt.*;
 //import javax.swing.SwingConstants;
 import javax.swing.*;
 
-import part2.model.Member;;
+import lib.model.Member;;
 
 // Main page of the GUI
 public class HomePage {
@@ -39,10 +39,10 @@ public class HomePage {
 
         // MEMBERS
         // TODO: add member photos
-        Member[] members = { new Member("1181203140", "Ong Wen Xuan", "part2/assets/images/hester.jpg", "25%"),
-                new Member("1181203056", "Elton Wong Chun Meng", "part2/assets/images/painPosition.png", "25%"),
-                new Member("1181203212", "Reynard Kok Jin Yik", "part2/assets/images/java.png", "25%"), 
-                new Member("1191102550", "Ng Zhi Shuen", "part2/assets/images/java.png", "25%"), };
+        Member[] members = { new Member("1181203140", "Ong Wen Xuan", "lib/assets/images/hester.jpg", "25%"),
+                new Member("1181203056", "Elton Wong Chun Meng", "lib/assets/images/java.png", "25%"),
+                new Member("1181203212", "Reynard Kok Jin Yik", "lib/assets/images/java.png", "25%"), 
+                new Member("1191102550", "Ng Zhi Shuen", "lib/assets/images/java.png", "25%"), };
 
         for (int i = 0; i < members.length; i++) {
             JPanel panel_member = new JPanel();
