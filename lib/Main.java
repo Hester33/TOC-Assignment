@@ -15,16 +15,12 @@ public class Main extends JFrame implements KeyListener {
         FAtoRG fa_to_rg_gui = new FAtoRG();
         Help help = new Help();
 
-
-        // Layout setup
-
         // Content setup
         JTabbedPane tabbedPane = new JTabbedPane();
         mainFrame.add(tabbedPane);
         tabbedPane.add("Home", home.panel);
-
-        tabbedPane.add("CYK", cyk.panel);
         tabbedPane.add("FA to RG", fa_to_rg_gui.panel);
+        tabbedPane.add("CYK", cyk.panel);
         tabbedPane.add("Help", help.panel);
 
 
