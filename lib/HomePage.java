@@ -40,7 +40,7 @@ public class HomePage {
         // MEMBERS
         // TODO: add member photos
         Member[] members = { new Member("1181203140", "Ong Wen Xuan", "lib/assets/images/hester.jpg", "25%"),
-                new Member("1181203056", "Elton Wong Chun Meng", "lib/assets/images/java.png", "25%"),
+                new Member("1181203056", "Elton Wong Chun Meng", "lib/assets/images/elton.png", "25%"),
                 new Member("1181203212", "Reynard Kok Jin Yik", "lib/assets/images/rey.jpg", "25%"), 
                 new Member("1191102550", "Ng Zhi Shuen", "lib/assets/images/zs.jpg", "25%"), };
 
