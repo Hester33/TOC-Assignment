@@ -12,6 +12,7 @@ public class Main extends JFrame implements KeyListener {
         JFrame mainFrame = new JFrame();
         HomePage home = new HomePage();
         TestingGUI1 testing = new TestingGUI1();
+        part_one_gui fa_to_rg_gui = new part_one_gui();
 //        Help help = new Help();
 
         // Layout setup
@@ -20,6 +21,7 @@ public class Main extends JFrame implements KeyListener {
         JTabbedPane tabbedPane = new JTabbedPane();
         mainFrame.add(tabbedPane);
         tabbedPane.add("Home", home.panel);
+        tabbedPane.add("FA to RG", fa_to_rg_gui.panel);
         tabbedPane.add("test", testing.panel);
 //        tabbedPane.add("Help", help.panel);
 
