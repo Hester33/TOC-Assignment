@@ -1,4 +1,4 @@
-package part2;
+package lib;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -11,7 +11,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 
-public class part_one_gui {
+public class FAtoRG {
     JPanel panel = new JPanel();
 
     private JPanel button_panel;
@@ -43,7 +43,7 @@ public class part_one_gui {
     private static final String OPEN_BRACKET = "{ ";
     private static final String CLOSE_BRACKET = " }";
 
-    part_one_gui() {
+    FAtoRG() {
         this.panel = new JPanel();
         this.panel.setLayout(new BoxLayout(this.panel, BoxLayout.Y_AXIS));
         

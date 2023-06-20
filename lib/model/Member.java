@@ -1,4 +1,4 @@
-package part2.model;
+package lib.model;
 
 public class Member {
     public String id;
