@@ -85,7 +85,7 @@ public class FAtoRG {
 
         import_button.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if (!has_imported) {
+                if (!has_imported && input_box.getText().trim().equals("")) {
                     input_file_browser = new JFileChooser();
                     
                     int return_value = input_file_browser.showOpenDialog(null);
